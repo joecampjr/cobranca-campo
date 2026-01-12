@@ -104,7 +104,7 @@ export default function NewMemberPage() {
                                         <SelectValue placeholder="Selecione a filial" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Matriz">Matriz (Padrão)</SelectItem>
+                                        {branches.length === 0 && <SelectItem value="disabled" disabled>Nenhuma filial cadastrada</SelectItem>}
                                         {branches.map(b => (
                                             <SelectItem key={b.id} value={b.name}>{b.name}</SelectItem>
                                         ))}
