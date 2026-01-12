@@ -1,6 +1,7 @@
 import { ManagerHeader } from "@/components/manager/manager-header"
 import { getCurrentUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import { db } from "@/lib/db"
 
 export default async function ManagerLayout({
     children,
@@ -13,14 +14,17 @@ export default async function ManagerLayout({
         redirect("/signin")
     }
 
-    // Double check basic access, though pages do specific checks
     if (!["manager", "company_admin"].includes(user.role)) {
         redirect("/signin")
     }
 
+    // Fetch branding
+    const companyRes = await db.query("SELECT display_name, logo_url FROM companies WHERE id = $1", [user.company_id])
+    const branding = companyRes.rows[0] || {}
+
     return (
         <div className="min-h-screen bg-muted/20">
-            <ManagerHeader user={user} />
+            <ManagerHeader user={user} branding={branding} />
             {children}
         </div>
     )

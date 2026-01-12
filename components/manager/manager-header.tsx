@@ -14,7 +14,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { User as UserType } from "@/lib/auth"
 
-export function ManagerHeader({ user }: { user: UserType }) {
+export function ManagerHeader({ user, branding }: { user: UserType, branding?: { display_name?: string, logo_url?: string } }) {
   const router = useRouter()
 
   const handleSignOut = async () => {
@@ -28,10 +28,16 @@ export function ManagerHeader({ user }: { user: UserType }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/manager/dashboard" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold hidden md:inline">Cobrança em Campo</span>
+              {branding?.logo_url ? (
+                <img src={branding.logo_url} alt="Logo" className="h-8 w-8 rounded-lg object-contain bg-white" />
+              ) : (
+                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                  <MapPin className="h-5 w-5 text-primary-foreground" />
+                </div>
+              )}
+              <span className="text-xl font-bold hidden md:inline">
+                {branding?.display_name || "Cobrança em Campo"}
+              </span>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-1">

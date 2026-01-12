@@ -1,18 +1,27 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Loader2 } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Link from "next/link"
-import { toast } from "sonner" // Assuming sonner or use standard alert
+import { toast } from "sonner"
 
 export default function NewMemberPage() {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
+    const [branches, setBranches] = useState<{ id: string, name: string }[]>([])
+
+    useEffect(() => {
+        fetch("/api/settings/branches")
+            .then(res => res.json())
+            .then(data => setBranches(data))
+            .catch(console.error)
+    }, [])
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -58,7 +67,7 @@ export default function NewMemberPage() {
                 <CardHeader>
                     <CardTitle>Adicionar Novo Membro</CardTitle>
                     <CardDescription>
-                        Cadastre um novo cobrador para sua equipe de campo.
+                        Cadastre um novo cobrador. Ele terá acesso limitado para gerar cobranças.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -84,12 +93,23 @@ export default function NewMemberPage() {
                                         value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
                                         e.target.value = value
                                     }}
+                                    required
                                 />
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="branch">Filial</Label>
-                                <Input id="branch" name="branch" placeholder="Ex: Matriz, Filial RJ..." />
+                                <Select name="branch">
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecione a filial" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Matriz">Matriz (Padrão)</SelectItem>
+                                        {branches.map(b => (
+                                            <SelectItem key={b.id} value={b.name}>{b.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
 
