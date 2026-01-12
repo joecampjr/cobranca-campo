@@ -14,12 +14,13 @@ async function getRecentCharges(companyId: string) {
         c.amount, 
         c.status, 
         c.created_at, 
-        c.customer_name, 
-        c.customer_cpf, 
-        c.asaas_invoice_url,
+        cust.name as customer_name, 
+        cust.document as customer_cpf, 
+        c.invoice_url as asaas_invoice_url,
         u.name as collector_name
     FROM charges c
     LEFT JOIN users u ON c.collector_id = u.id
+    LEFT JOIN customers cust ON c.customer_id = cust.id
     WHERE c.company_id = $1
     ORDER BY c.created_at DESC
     LIMIT 20
