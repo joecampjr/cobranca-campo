@@ -15,6 +15,8 @@ export async function DELETE(
         }
 
         const chargeId = params.id
+        const { searchParams } = new URL(req.url)
+        const force = searchParams.get("force") === "true"
 
         // Fetch charge details to check ownership/permissions and get asaas_id
         const chargeResult = await db.query(`
@@ -40,28 +42,36 @@ export async function DELETE(
         const apiKey = companyRes.rows[0]?.asaas_api_key || process.env.ASAAS_API_KEY
 
         if (!apiKey) {
-            return new NextResponse("Asaas API Key not found for this company", { status: 500 })
-        }
+            if (force) {
+                console.warn(`[Force Delete] Skipping Asaas check due to missing API Key for charge ${chargeId}`)
+            } else {
+                return new NextResponse("Asaas API Key not found for this company", { status: 500 })
+            }
+        } else {
+            // Delete in Asaas
+            if (charge.asaas_payment_id) {
+                const asaasResponse = await fetch(`https://www.asaas.com/api/v3/payments/${charge.asaas_payment_id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "access_token": apiKey
+                    }
+                })
 
-        // Delete in Asaas
-        if (charge.asaas_payment_id) {
-            const asaasResponse = await fetch(`https://www.asaas.com/api/v3/payments/${charge.asaas_payment_id}`, {
-                method: "DELETE",
-                headers: {
-                    "access_token": apiKey
-                }
-            })
+                if (!asaasResponse.ok) {
+                    if (asaasResponse.status === 404) {
+                        // Already deleted in Asaas, proceed to delete local
+                        console.log("Charge already deleted in Asaas")
+                    } else {
+                        const errorJson = await asaasResponse.json().catch(() => null)
+                        const errorText = errorJson?.errors?.[0]?.description || await asaasResponse.text() || "Erro desconhecido no Asaas"
 
-            if (!asaasResponse.ok) {
-                if (asaasResponse.status === 404) {
-                    // Already deleted in Asaas, proceed to delete local
-                    console.log("Charge already deleted in Asaas")
-                } else {
-                    const errorJson = await asaasResponse.json().catch(() => null)
-                    const errorText = errorJson?.errors?.[0]?.description || await asaasResponse.text() || "Erro desconhecido no Asaas"
+                        console.error("Asaas Delete Error:", errorText)
 
-                    console.error("Asaas Delete Error:", errorText)
-                    return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
+                        if (!force) {
+                            return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
+                        }
+                        console.warn(`[Force Delete] Ignoring Asaas error for charge ${chargeId}: ${errorText}`)
+                    }
                 }
             }
         }

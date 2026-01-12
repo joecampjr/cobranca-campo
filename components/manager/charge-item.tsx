@@ -7,6 +7,8 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { formatCurrency } from "@/lib/utils"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -31,6 +33,7 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
     const [isDeleting, setIsDeleting] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [deleteError, setDeleteError] = useState<string | null>(null)
+    const [forceDelete, setForceDelete] = useState(false)
 
     const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" }> = {
         "PENDING": { label: "Pendente", variant: "secondary" },
@@ -44,13 +47,13 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
         setIsDeleting(true)
         setDeleteError(null)
         try {
-            const res = await fetch(`/api/charges/${charge.id}`, {
+            const url = `/api/charges/${charge.id}` + (forceDelete ? "?force=true" : "")
+            const res = await fetch(url, {
                 method: "DELETE"
             })
 
             if (!res.ok) {
                 const errText = await res.text()
-                // Return clean error if possible
                 throw new Error(errText || "Erro ao excluir")
             }
 
@@ -64,6 +67,8 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
             console.error(error)
             const msg = error instanceof Error ? error.message : "Erro desconhecido"
             setDeleteError(msg)
+            // If failed, ensure forceDelete defaults to false initially, but user can now enable it.
+            // (State forceDelete is preserved if they checked it)
             toast.error("Falha ao excluir")
         } finally {
             setIsDeleting(false)
@@ -122,8 +127,13 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
 
                     {canDelete && (
                         <AlertDialog open={isDialogOpen} onOpenChange={(open) => {
-                            if (!isDeleting) setIsDialogOpen(open)
-                            if (!open) setDeleteError(null)
+                            if (!isDeleting) {
+                                setIsDialogOpen(open)
+                                if (!open) {
+                                    setDeleteError(null)
+                                    setForceDelete(false)
+                                }
+                            }
                         }}>
                             <AlertDialogTrigger asChild>
                                 <Button
@@ -145,8 +155,24 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                                 </AlertDialogHeader>
 
                                 {deleteError && (
-                                    <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20 mt-2 break-words">
-                                        <strong>Erro:</strong> {deleteError}
+                                    <div className="space-y-4">
+                                        <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20 break-words">
+                                            <strong>Erro:</strong> {deleteError}
+                                        </div>
+
+                                        <div className="flex items-center space-x-2 border p-3 rounded-md bg-muted/50">
+                                            <Checkbox
+                                                id="force-delete"
+                                                checked={forceDelete}
+                                                onCheckedChange={(checked) => setForceDelete(checked as boolean)}
+                                            />
+                                            <Label htmlFor="force-delete" className="text-sm cursor-pointer">
+                                                Ignorar erro do Asaas e forçar exclusão local
+                                                <p className="text-xs text-muted-foreground font-normal">
+                                                    Use isso apenas se o registro já foi removido do Asaas manualmente.
+                                                </p>
+                                            </Label>
+                                        </div>
                                     </div>
                                 )}
 
@@ -163,7 +189,7 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                                                 Excluindo...
                                             </>
                                         ) : (
-                                            "Sim, Excluir"
+                                            forceDelete ? "Forçar Exclusão" : "Sim, Excluir"
                                         )}
                                     </Button>
                                 </AlertDialogFooter>
