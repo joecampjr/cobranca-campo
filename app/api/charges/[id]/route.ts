@@ -4,9 +4,10 @@ import { NextResponse } from "next/server"
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
     try {
+        const params = await props.params;
         const user = await getCurrentUser()
 
         if (!user || !["manager", "company_admin"].includes(user.role)) {
@@ -24,7 +25,7 @@ export async function DELETE(
         `, [chargeId, user.company_id])
 
         if (chargeResult.rows.length === 0) {
-            return new NextResponse("Charge not found", { status: 404 })
+            return new NextResponse(`Charge with ID ${chargeId} not found in DB`, { status: 404 })
         }
 
         const charge = chargeResult.rows[0]
@@ -39,7 +40,7 @@ export async function DELETE(
         const apiKey = companyRes.rows[0]?.asaas_api_key || process.env.ASAAS_API_KEY
 
         if (!apiKey) {
-            return new NextResponse("Asaas API Key not found", { status: 500 })
+            return new NextResponse("Asaas API Key not found for this company", { status: 500 })
         }
 
         // Delete in Asaas
@@ -51,11 +52,17 @@ export async function DELETE(
                 }
             })
 
-            if (!asaasResponse.ok && asaasResponse.status !== 404) {
-                // 404 means already deleted, which is fine to proceed
-                const errorText = await asaasResponse.text()
-                console.error("Asaas Delete Error:", errorText)
-                return new NextResponse("Failed to delete in Asaas: " + errorText, { status: 502 })
+            if (!asaasResponse.ok) {
+                if (asaasResponse.status === 404) {
+                    // Already deleted in Asaas, proceed to delete local
+                    console.log("Charge already deleted in Asaas")
+                } else {
+                    const errorJson = await asaasResponse.json().catch(() => null)
+                    const errorText = errorJson?.errors?.[0]?.description || await asaasResponse.text() || "Erro desconhecido no Asaas"
+
+                    console.error("Asaas Delete Error:", errorText)
+                    return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
+                }
             }
         }
 
@@ -66,6 +73,6 @@ export async function DELETE(
 
     } catch (error) {
         console.error("[CHARGE_DELETE]", error)
-        return new NextResponse("Internal Error", { status: 500 })
+        return new NextResponse("Internal Error: " + (error instanceof Error ? error.message : String(error)), { status: 500 })
     }
 }
