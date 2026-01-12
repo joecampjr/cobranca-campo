@@ -148,7 +148,11 @@ export default function NewChargePage() {
                                 </Button>
                             )}
 
-                            <Button className="w-full" onClick={() => shareLink(successData.invoiceUrl)}>
+                            <Button className="w-full" onClick={() => window.open(successData.invoiceUrl, '_blank')}>
+                                <ExternalLink className="mr-2 h-4 w-4" /> Abrir Cobrança
+                            </Button>
+
+                            <Button variant="outline" className="w-full" onClick={() => shareLink(successData.invoiceUrl)}>
                                 <Share2 className="mr-2 h-4 w-4" /> Compartilhar Link
                             </Button>
 
