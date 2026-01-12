@@ -40,12 +40,7 @@ export function ManagerHeader({ user }: { user: UserType }) {
                   Dashboard
                 </Button>
               </Link>
-              <Link href="/manager/routes">
-                <Button variant="ghost" size="sm">
-                  <Route className="h-4 w-4 mr-2" />
-                  Rotas
-                </Button>
-              </Link>
+
               <Link href="/manager/team">
                 <Button variant="ghost" size="sm">
                   <Users className="h-4 w-4 mr-2" />
@@ -75,9 +70,7 @@ export function ManagerHeader({ user }: { user: UserType }) {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>Menu</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/manager/routes">Rotas</Link>
-                </DropdownMenuItem>
+
                 <DropdownMenuItem asChild>
                   <Link href="/manager/team">Equipe</Link>
                 </DropdownMenuItem>
