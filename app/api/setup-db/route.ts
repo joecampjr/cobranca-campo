@@ -51,6 +51,9 @@ CREATE TABLE IF NOT EXISTS users (
     -- Role: super_admin, company_admin, manager, collector, customer
     role VARCHAR(50) NOT NULL,
     
+    -- Documents
+    document VARCHAR(20),
+
     -- Collector specific fields
     commission_percentage DECIMAL(5,2) DEFAULT 0,
     collection_goal DECIMAL(15,2) DEFAULT 0,
@@ -274,6 +277,9 @@ CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(read);
 
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
+
+-- MIGRATIONS (Safe to run multiple times)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS document VARCHAR(20);
     `
 
         // Split logic: Postgres normally handles multiple statements, but creating indexes concurrently might fail in transaction blocks if not careful.
