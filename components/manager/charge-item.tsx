@@ -29,6 +29,7 @@ interface ChargeItemProps {
 export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: ChargeItemProps) {
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" }> = {
         "PENDING": { label: "Pendente", variant: "secondary" },
@@ -51,14 +52,14 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
             }
 
             toast.success("Cobrança removida com sucesso")
+            setIsDialogOpen(false)
             if (onDelete) {
                 onDelete()
             }
             router.refresh()
         } catch (error) {
             toast.error("Erro ao excluir: " + (error instanceof Error ? error.message : "Erro desconhecido"))
-        } finally {
-            setIsDeleting(false)
+            setIsDeleting(false) // Stop loading but keep dialog open to retry
         }
     }
 
@@ -78,7 +79,6 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                         <User className="h-3 w-3" />
                         <span>Cobrador: {charge.collector_name || "N/A"}</span>
                     </div>
-                    {/* Display Branch */}
                     {charge.collector_branch && (
                         <div className="flex items-center gap-1 text-primary/80 font-medium">
                             <MapPin className="h-3 w-3" />
@@ -114,15 +114,14 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                     )}
 
                     {canDelete && (
-                        <AlertDialog>
+                        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <AlertDialogTrigger asChild>
                                 <Button
                                     size="sm"
                                     variant="destructive"
                                     className="h-9 w-9 p-0"
-                                    disabled={isDeleting}
                                 >
-                                    {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                                    <Trash2 className="h-4 w-4" />
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -135,16 +134,22 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                    <AlertDialogAction
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            handleDelete()
-                                        }}
-                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+                                    {/* Using standard Button instead of AlertDialogAction to control events manually */}
+                                    <Button
+                                        variant="destructive"
+                                        onClick={handleDelete}
+                                        disabled={isDeleting}
                                     >
-                                        Sim, Excluir
-                                    </AlertDialogAction>
+                                        {isDeleting ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Excluindo...
+                                            </>
+                                        ) : (
+                                            "Sim, Excluir"
+                                        )}
+                                    </Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
