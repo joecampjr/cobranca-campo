@@ -13,9 +13,24 @@ import { MapPin, Bell, Menu, Settings, LogOut, User, Users, Route } from "lucide
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { User as UserType } from "@/lib/auth"
+import { usePwaInstall } from "@/hooks/use-pwa-install"
+import { InstallModal } from "@/components/pwa/install-modal"
+import { useState } from "react"
+import { Download } from "lucide-react"
 
 export function ManagerHeader({ user, branding }: { user: UserType, branding?: { display_name?: string, logo_url?: string } }) {
   const router = useRouter()
+
+  const { isSupported, isIOS, isInstalled, promptInstall } = usePwaInstall()
+  const [showInstallModal, setShowInstallModal] = useState(false)
+
+  const handleInstallClick = () => {
+    if (isIOS) {
+      setShowInstallModal(true)
+    } else {
+      promptInstall()
+    }
+  }
 
   const handleSignOut = async () => {
     await fetch("/api/auth/signout", { method: "POST" })
@@ -83,6 +98,15 @@ export function ManagerHeader({ user, branding }: { user: UserType, branding?: {
                 <DropdownMenuItem asChild>
                   <Link href="/manager/reports">Relatórios</Link>
                 </DropdownMenuItem>
+                {(!isInstalled && (isSupported || isIOS)) && (
+                   <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={handleInstallClick}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Instalar App
+                    </DropdownMenuItem>
+                   </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -122,6 +146,8 @@ export function ManagerHeader({ user, branding }: { user: UserType, branding?: {
           </div>
         </div>
       </div>
-    </header>
+      </div>
+      <InstallModal open={showInstallModal} onOpenChange={setShowInstallModal} />
+    </header >
   )
 }
