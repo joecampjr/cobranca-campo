@@ -51,14 +51,32 @@ export function BrandingTab({ initialName, initialLogo }: { initialName?: string
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="logoUrl">URL do Logo (Ícone)</Label>
-                    <Input
-                        id="logoUrl"
-                        value={logo}
-                        onChange={(e) => setLogo(e.target.value)}
-                        placeholder="https://..."
-                    />
-                    <p className="text-xs text-muted-foreground">Cole o link direto da imagem do seu logo (quadrado recomendado).</p>
+                    <Label htmlFor="logoUpload">Logo (Ícone)</Label>
+                    <div className="flex gap-4 items-center">
+                        {logo && (
+                            <img src={logo} alt="Preview" className="h-12 w-12 rounded-lg object-contain bg-muted border" />
+                        )}
+                        <Input
+                            id="logoUpload"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                if (file) {
+                                    if (file.size > 1024 * 1024) { // 1MB limit
+                                        toast.error("Imagem muito grande. Máximo 1MB.")
+                                        return
+                                    }
+                                    const reader = new FileReader()
+                                    reader.onloadend = () => {
+                                        setLogo(reader.result as string)
+                                    }
+                                    reader.readAsDataURL(file)
+                                }
+                            }}
+                        />
+                    </div>
+                    <p className="text-xs text-muted-foreground">Envie uma imagem quadrada (PNG/JPG) de até 1MB.</p>
                 </div>
 
                 <Button onClick={save} disabled={loading}>
