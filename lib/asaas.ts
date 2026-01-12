@@ -18,6 +18,7 @@ interface AsaasCustomer {
   complement?: string
   province?: string
   postalCode?: string
+  deleted?: boolean
 }
 
 interface AsaasPayment {
@@ -136,6 +137,11 @@ class AsaasClient {
     return response.data[0] || null
   }
 
+  async restoreCustomer(customerId: string): Promise<AsaasCustomer> {
+    return this.request<AsaasCustomer>(`/customers/${customerId}/restore`, {
+      method: "POST"
+    })
+  }
 
   // Payment Management
   async createPayment(data: {
