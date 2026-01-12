@@ -11,7 +11,17 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
-        const { name, email, cpf, branch, password } = await req.json()
+        const { name, email, cpf, branch, password, role = 'collector' } = await req.json()
+
+        // Permission check
+        if (user.role === 'manager' && role !== 'collector') {
+            return new NextResponse("Managers can only create collectors", { status: 403 })
+        }
+
+        const validRoles = ['collector', 'manager', 'company_admin']
+        if (!validRoles.includes(role)) {
+            return new NextResponse("Invalid role", { status: 400 })
+        }
 
         // Basic validation
         if (!email || !password || !name) {
@@ -30,12 +40,12 @@ export async function POST(req: Request) {
 
         const hashedPassword = await hash(password, 10)
 
-        // Insert new collector
+        // Insert new user
         const result = await db.query(
             `INSERT INTO users (name, email, password_hash, role, company_id, cpf, branch, created_at, updated_at) 
-       VALUES ($1, $2, $3, 'collector', $4, $5, $6, NOW(), NOW()) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) 
        RETURNING id, name, email`,
-            [name, email, hashedPassword, user.company_id, cpf, branch]
+            [name, email, hashedPassword, role, user.company_id, cpf, branch]
         )
 
         return NextResponse.json(result.rows[0])
