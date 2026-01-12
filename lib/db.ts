@@ -20,7 +20,9 @@ class Database {
 
   async query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
     if (!this.pool) {
-      this.pool = createPool()
+      this.pool = createPool({
+        connectionString: process.env.POSTGRES_URL || process.env.DATABASE_URL,
+      })
     }
     const result = await this.pool.query<T>(text, params)
     return {
