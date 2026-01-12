@@ -157,11 +157,7 @@ async function handlePaymentDeleted(event: AsaasWebhookEvent) {
   const { payment } = event
 
   await db.query(
-    `UPDATE charges 
-     SET status = 'cancelled',
-         asaas_payment_id = NULL,
-         updated_at = NOW()
-     WHERE asaas_payment_id = $1`,
+    `DELETE FROM charges WHERE asaas_payment_id = $1`,
     [payment.id],
   )
 }
