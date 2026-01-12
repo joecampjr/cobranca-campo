@@ -82,8 +82,20 @@ class AsaasClient {
     })
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: "Unknown error" }))
-      throw new Error(`Asaas API Error: ${error.message || response.statusText}`)
+      let errorMessage = response.statusText;
+      try {
+        const errorData = await response.json();
+        // Asaas format: { errors: [{ code: '...', description: '...' }] }
+        if (errorData.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+          errorMessage = errorData.errors[0].description;
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        // response was not json
+      }
+
+      throw new Error(`Asaas API Error: ${errorMessage}`)
     }
 
     return response.json()
