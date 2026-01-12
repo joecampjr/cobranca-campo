@@ -4,10 +4,10 @@ import { cookies } from "next/headers"
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password, phone } = await request.json()
+    const { name, email, password, phone, cpf } = await request.json()
 
-    if (!name || !email || !password) {
-      return NextResponse.json({ error: "Name, email, and password are required" }, { status: 400 })
+    if (!name || !email || !password || !cpf) {
+      return NextResponse.json({ error: "Name, email, password and CPF are required" }, { status: 400 })
     }
 
     // Create user with customer role by default (for company signup, use company_admin)
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       password,
       role: "customer",
       phone,
+      document: cpf.replace(/\D/g, ""), // Clean CPF
     })
 
     // Create session

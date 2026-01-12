@@ -17,6 +17,7 @@ export default function SignUpPage() {
     name: "",
     email: "",
     phone: "",
+    cpf: "",
     password: "",
     confirmPassword: "",
   })
@@ -47,6 +48,7 @@ export default function SignUpPage() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
+          cpf: formData.cpf,
           password: formData.password,
         }),
       })
@@ -93,6 +95,31 @@ export default function SignUpPage() {
               placeholder="João Silva"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cpf">CPF</Label>
+            <Input
+              id="cpf"
+              type="text"
+              placeholder="000.000.000-00"
+              value={formData.cpf}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, "")
+                if (value.length > 11) value = value.slice(0, 11)
+
+                if (value.length > 9) {
+                  value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+                } else if (value.length > 6) {
+                  value = value.replace(/(\d{3})(\d{3})(\d+)/, "$1.$2.$3")
+                } else if (value.length > 3) {
+                  value = value.replace(/(\d{3})(\d+)/, "$1.$2")
+                }
+
+                setFormData({ ...formData, cpf: value })
+              }}
               required
             />
           </div>

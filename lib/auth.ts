@@ -100,15 +100,16 @@ export async function createUser(data: {
   email: string
   password: string
   role: UserRole
+  document?: string
   phone?: string
 }): Promise<User> {
   const passwordHash = await hashPassword(data.password)
 
   const result = await db.query<User>(
-    `INSERT INTO users (company_id, name, email, password_hash, role, phone)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     RETURNING id, company_id, name, email, role, status, phone`,
-    [data.company_id || null, data.name, data.email, passwordHash, data.role, data.phone || null],
+    `INSERT INTO users (company_id, name, email, password_hash, role, phone, document)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING id, company_id, name, email, role, status, phone, document`,
+    [data.company_id || null, data.name, data.email, passwordHash, data.role, data.phone || null, data.document || null],
   )
 
   return result.rows[0]
