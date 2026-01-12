@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Copy, CheckCircle, AlertCircle } from "lucide-react"
+import { Loader2, Copy, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react"
+import Link from "next/link"
 
 export default function AsaasSettingsPage() {
     const { toast } = useToast()
@@ -87,9 +88,16 @@ export default function AsaasSettingsPage() {
 
     return (
         <div className="p-6 max-w-4xl mx-auto space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">Integração Asaas</h1>
-                <p className="text-muted-foreground">Configure sua conexão com o gateway de pagamento.</p>
+            <div className="flex items-center gap-4">
+                <Link href="/manager/dashboard">
+                    <Button variant="outline" size="icon">
+                        <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                </Link>
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Integração Asaas</h1>
+                    <p className="text-muted-foreground">Configure sua conexão com o gateway de pagamento.</p>
+                </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
