@@ -1,5 +1,6 @@
 import type React from "react"
-import type { Metadata } from "next"
+// Last Build: 2026-01-12 12:40
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
