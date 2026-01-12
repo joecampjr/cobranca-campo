@@ -62,7 +62,7 @@ export function AsaasSettings({ initialApiKey }: { initialApiKey?: string }) {
                             />
                         </div>
                         <p className="text-xs text-muted-foreground">
-              Você pode encontrar esta chave no painel do Asaas em Configurações > Integrações.
+                            Você pode encontrar esta chave no painel do Asaas em Configurações &gt; Integrações.
                         </p>
                     </div>
 
