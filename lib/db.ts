@@ -7,9 +7,9 @@ type QueryResult<T extends QueryResultRow> = {
 
 class Database {
   private static instance: Database
-  private pool = createPool()
+  private pool: ReturnType<typeof createPool> | undefined
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): Database {
     if (!Database.instance) {
@@ -19,6 +19,9 @@ class Database {
   }
 
   async query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
+    if (!this.pool) {
+      this.pool = createPool()
+    }
     const result = await this.pool.query<T>(text, params)
     return {
       rows: result.rows,

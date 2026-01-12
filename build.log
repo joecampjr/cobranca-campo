@@ -1,0 +1,309 @@
+
+> my-v0-project@0.1.0 build
+> next build
+
+   Ôû▓ Next.js 16.0.10 (Turbopack)
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 2.3s
+   Skipping validation of types
+   Collecting page data using 19 workers ...
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_b5f0c040._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_b5f0c040._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_ce49fa09._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_b5f0c040._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[root-of-the-server]__fa838f73._.js:1:2047)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_b5f0c040._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error: Failed to collect configuration for /collector/history
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__6460d45b._.js:1:8895)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /admin/charges
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__ae5b419a._.js:1:9326)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /admin/dashboard
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__6cfe3411._.js:1:3168)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /admin/customers
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__16b76058._.js:1:8408)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_b5f0c040._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[root-of-the-server]__f4953d43._.js:1:2047)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+    at th (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:5067)
+    at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6361)
+    at new tf (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6377)
+    at tf.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6435)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_801f7102._.js:17:6559)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9)
+    at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:738:12)
+    at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\_b5f0c040._.js:1:39020)
+    at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\[turbopack]_runtime.js:715:9) {
+  code: 'missing_connection_string'
+}
+Error: Failed to collect configuration for /manager/dashboard
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__480d2c5c._.js:1:10676)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /collector
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__ea703aca._.js:1:8134)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /manager/team
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__fc094435._.js:1:8453)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /customer/portal
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__bf4991e9._.js:1:8889)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /admin/collectors
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__afb3ecd9._.js:1:9595)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /manager/routes
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__3946cbc3._.js:1:9929)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+Error: Failed to collect configuration for /collector/route
+    at ignore-listed frames {
+  [cause]: Error [VercelPostgresError]: VercelPostgresError - 'missing_connection_string': You did not supply a 'connectionString' and no 'POSTGRES_URL' env var was found.
+      at bj (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:5067)
+      at <instance_members_initializer> (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6361)
+      at new bm (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6377)
+      at bm.getInstance (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6435)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\_483fd8ea._.js:20:6559)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at module evaluation (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[root-of-the-server]__19cccc8b._.js:1:8894)
+      at instantiateModule (C:\xampp\htdocs\cobranca-campo\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9) {
+    code: 'missing_connection_string'
+  }
+}
+
+> Build error occurred
+Error: Failed to collect page data for /api/payments/create
+    at ignore-listed frames {
+  type: 'Error'
+}
