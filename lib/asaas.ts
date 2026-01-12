@@ -38,14 +38,14 @@ interface AsaasPayment {
 
 interface AsaasWebhookEvent {
   event:
-    | "PAYMENT_CREATED"
-    | "PAYMENT_UPDATED"
-    | "PAYMENT_CONFIRMED"
-    | "PAYMENT_RECEIVED"
-    | "PAYMENT_OVERDUE"
-    | "PAYMENT_DELETED"
-    | "PAYMENT_RESTORED"
-    | "PAYMENT_REFUNDED"
+  | "PAYMENT_CREATED"
+  | "PAYMENT_UPDATED"
+  | "PAYMENT_CONFIRMED"
+  | "PAYMENT_RECEIVED"
+  | "PAYMENT_OVERDUE"
+  | "PAYMENT_DELETED"
+  | "PAYMENT_RESTORED"
+  | "PAYMENT_REFUNDED"
   payment: {
     id: string
     customer: string
@@ -118,6 +118,12 @@ class AsaasClient {
       body: JSON.stringify(data),
     })
   }
+
+  async findCustomer(cpfCnpj: string): Promise<AsaasCustomer | null> {
+    const response = await this.request<{ data: AsaasCustomer[] }>(`/customers?cpfCnpj=${cpfCnpj}&limit=1`)
+    return response.data[0] || null
+  }
+
 
   // Payment Management
   async createPayment(data: {

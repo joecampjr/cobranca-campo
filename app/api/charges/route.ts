@@ -38,25 +38,27 @@ export async function POST(req: Request) {
 
         // 4. Find or Create Customer
         // Check local DB first
-        let customerResult = await db.query("SELECT * FROM customers WHERE document = $1", [cpf])
+        let customerResult = await db.query("SELECT * FROM customers WHERE document = $1 AND company_id = $2", [cpf, user.company_id])
         let customer = customerResult.rows[0]
         let asaasCustomerId = customer?.asaas_customer_id
 
         if (!asaasCustomerId) {
-            // Create in Asaas
-            // Note: Asaas might return existing customer if CPF matches, handling that implicitly via API response usually works
-            // But for safety, we try create and catch or use get
+            // Check if exists in Asaas first (to duplicate/error avoidance)
             try {
-                const asaasCustomer = await asaas.createCustomer({
-                    name,
-                    cpfCnpj: cpf
-                })
-                asaasCustomerId = asaasCustomer.id
+                const existingAsaasCustomer = await asaas.findCustomer(cpf)
+                if (existingAsaasCustomer) {
+                    asaasCustomerId = existingAsaasCustomer.id
+                } else {
+                    // Create in Asaas
+                    const asaasCustomer = await asaas.createCustomer({
+                        name,
+                        cpfCnpj: cpf
+                    })
+                    asaasCustomerId = asaasCustomer.id
+                }
             } catch (e) {
-                console.error("Error creating Asaas customer", e)
-                // Fallback: try to find by CPF if error was duplication?
-                // For now assume success or throw
-                throw e
+                console.error("Error managing Asaas customer", e)
+                throw new Error("Erro ao comunicar com o Asaas para cadastro de cliente")
             }
         }
 
@@ -64,7 +66,7 @@ export async function POST(req: Request) {
         if (!customer) {
             const newCustomer = await db.query(
                 `INSERT INTO customers (company_id, name, document, asaas_customer_id) 
-             VALUES ($1, $2, $3, $4) RETURNING id`,
+                 VALUES ($1, $2, $3, $4) RETURNING id`,
                 [user.company_id, name, cpf, asaasCustomerId]
             )
             customer = { id: newCustomer.rows[0].id }
@@ -100,6 +102,7 @@ export async function POST(req: Request) {
         }
 
         // 7. Save Charge to DB
+        // Using "PENDING" (uppercase) to match Asaas status convention
         await db.query(
             `INSERT INTO charges 
         (company_id, customer_id, collector_id, description, amount, due_date, payment_method, 
@@ -113,7 +116,7 @@ export async function POST(req: Request) {
                 amount,
                 dueDate,
                 paymentMethod,
-                "pending",
+                "PENDING",
                 asaasPayment.id,
                 asaasPayment.bankSlipUrl || asaasPayment.invoiceUrl, // Use invoice URL as fallback
                 pixCode,
