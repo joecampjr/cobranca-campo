@@ -56,6 +56,17 @@ export async function POST(req: Request) {
             try {
                 const existingAsaasCustomer = await asaas.findCustomer(cpf)
                 if (existingAsaasCustomer) {
+                    if (existingAsaasCustomer.deleted) {
+                        try {
+                            await asaas.restoreCustomer(existingAsaasCustomer.id)
+                            console.log(`Restored deleted Asaas customer: ${existingAsaasCustomer.id}`)
+                        } catch (restoreError) {
+                            console.error("Failed to restore customer", restoreError)
+                            // Tries to create new one? No, Asaas blocks duplication.
+                            // We hope restore works or we can't proceed.
+                            throw new Error("Cliente está removido no Asaas e não foi possível restaurá-lo.")
+                        }
+                    }
                     asaasCustomerId = existingAsaasCustomer.id
                 } else {
                     // Create in Asaas
