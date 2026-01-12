@@ -36,13 +36,24 @@ export default async function ManagerDashboardPage() {
     redirect("/signin")
   }
 
-  const charges = await getRecentCharges(user.company_id)
+  const { data: charges, error } = await getRecentCharges(user.company_id)
 
   const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" }> = {
     "PENDING": { label: "Pendente", variant: "secondary" },
     "RECEIVED": { label: "Pago", variant: "success" },
     "CONFIRMED": { label: "Confirmado", variant: "success" },
     "OVERDUE": { label: "Vencido", variant: "destructive" },
+  }
+
+  if (error) {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <div className="bg-destructive/10 text-destructive p-4 rounded-md border border-destructive/20">
+          <h3 className="font-bold">Erro ao carregar dashboard</h3>
+          <p className="font-mono text-sm mt-2">{error}</p>
+        </div>
+      </main>
+    )
   }
 
   return (
