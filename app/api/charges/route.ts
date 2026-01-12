@@ -23,9 +23,17 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { cpf, name, amount, description, paymentMethod } = body
 
-        // 3. Setup Asaas (Assuming sandbox for now, but should come from tenant config)
-        // In real app, we fetch tenant settings here
-        const asaas = getAsaasClient(process.env.ASAAS_API_KEY)
+        // 3. Setup Asaas
+        // Fetch tenant settings
+        const companyRes = await db.query("SELECT asaas_api_key FROM companies WHERE id = $1", [user.company_id])
+        const companyApiKey = companyRes.rows[0]?.asaas_api_key
+
+        const apiKey = companyApiKey || process.env.ASAAS_API_KEY
+        if (!apiKey) {
+            return NextResponse.json({ error: "Configuração de pagamento não encontrada. Contate o administrador." }, { status: 400 })
+        }
+
+        const asaas = getAsaasClient(apiKey)
 
         // 4. Find or Create Customer
         // Check local DB first
