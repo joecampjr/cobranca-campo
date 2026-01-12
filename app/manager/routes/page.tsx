@@ -2,7 +2,6 @@ import { getCurrentUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ManagerHeader } from "@/components/manager/manager-header"
 import { Plus, MapPin, Calendar, UsersIcon } from "lucide-react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
@@ -64,92 +63,89 @@ export default async function RoutesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/20">
-      <ManagerHeader user={user} />
-
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Rotas de Cobrança</h1>
-            <p className="text-muted-foreground">Gerencie e otimize as rotas da sua equipe</p>
-          </div>
-          <Link href="/manager/routes/new">
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Nova Rota
-            </Button>
-          </Link>
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Rotas de Cobrança</h1>
+          <p className="text-muted-foreground">Gerencie e otimize as rotas da sua equipe</p>
         </div>
+        <Link href="/manager/routes/new">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Nova Rota
+          </Button>
+        </Link>
+      </div>
 
-        <div className="grid gap-6">
-          {routes.map((route) => (
-            <Card key={route.id} className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-6 w-6 text-primary" />
+      <div className="grid gap-6">
+        {routes.map((route) => (
+          <Card key={route.id} className="p-6 hover:shadow-lg transition-shadow">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="text-lg font-semibold">{route.name}</h3>
+                      <Badge variant={statusColors[route.status]}>{statusLabels[route.status]}</Badge>
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <h3 className="text-lg font-semibold">{route.name}</h3>
-                        <Badge variant={statusColors[route.status]}>{statusLabels[route.status]}</Badge>
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>{new Date(route.date).toLocaleDateString("pt-BR")}</span>
                       </div>
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      {route.collector && (
                         <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          <span>{new Date(route.date).toLocaleDateString("pt-BR")}</span>
+                          <UsersIcon className="h-4 w-4" />
+                          <span>{route.collector}</span>
                         </div>
-                        {route.collector && (
-                          <div className="flex items-center gap-1">
-                            <UsersIcon className="h-4 w-4" />
-                            <span>{route.collector}</span>
-                          </div>
-                        )}
-                        <span>{route.customers} clientes</span>
-                      </div>
+                      )}
+                      <span>{route.customers} clientes</span>
                     </div>
                   </div>
+                </div>
 
-                  {route.status === "in_progress" && (
-                    <div className="mb-2">
-                      <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="text-muted-foreground">Progresso</span>
-                        <span className="font-medium">
-                          {route.completed} / {route.customers}
-                        </span>
-                      </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-primary transition-all"
-                          style={{ width: `${(route.completed / route.customers) * 100}%` }}
-                        />
-                      </div>
+                {route.status === "in_progress" && (
+                  <div className="mb-2">
+                    <div className="flex items-center justify-between text-sm mb-2">
+                      <span className="text-muted-foreground">Progresso</span>
+                      <span className="font-medium">
+                        {route.completed} / {route.customers}
+                      </span>
                     </div>
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all"
+                        style={{ width: `${(route.completed / route.customers) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="text-sm text-muted-foreground mb-1">Valor Total</p>
+                  <p className="text-xl font-bold">
+                    R$ {route.totalAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                  </p>
+                  {route.collectedAmount > 0 && (
+                    <p className="text-sm text-accent">
+                      R$ {route.collectedAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} coletado
+                    </p>
                   )}
                 </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground mb-1">Valor Total</p>
-                    <p className="text-xl font-bold">
-                      R$ {route.totalAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                    </p>
-                    {route.collectedAmount > 0 && (
-                      <p className="text-sm text-accent">
-                        R$ {route.collectedAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} coletado
-                      </p>
-                    )}
-                  </div>
-                  <Link href={`/manager/routes/${route.id}`}>
-                    <Button variant="outline">Ver Detalhes</Button>
-                  </Link>
-                </div>
+                <Link href={`/manager/routes/${route.id}`}>
+                  <Button variant="outline">Ver Detalhes</Button>
+                </Link>
               </div>
-            </Card>
-          ))}
-        </div>
-      </main>
-    </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </main>
   )
 }
