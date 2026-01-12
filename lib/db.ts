@@ -1,13 +1,13 @@
-// Database client singleton
-// This will work with any Postgres provider (Neon, Supabase, etc.)
+import { createPool, type QueryResult as VercelQueryResult, type QueryResultRow } from "@vercel/postgres"
 
-type QueryResult<T = any> = {
+type QueryResult<T extends QueryResultRow> = {
   rows: T[]
   rowCount: number
 }
 
 class Database {
   private static instance: Database
+  private pool = createPool()
 
   private constructor() {}
 
@@ -18,10 +18,12 @@ class Database {
     return Database.instance
   }
 
-  async query<T = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
-    // This is a placeholder that will work with any DB client
-    // Users can replace this with their actual DB client (neon, pg, etc.)
-    throw new Error("Database not configured. Please set up your database connection.")
+  async query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
+    const result = await this.pool.query<T>(text, params)
+    return {
+      rows: result.rows,
+      rowCount: result.rowCount || 0,
+    }
   }
 }
 
