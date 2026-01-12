@@ -63,7 +63,6 @@ export default async function RoutesPage() {
   }
 
   return (
-  return (
     <main className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
