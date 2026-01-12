@@ -1,13 +1,8 @@
-import { createPool, type QueryResult as VercelQueryResult, type QueryResultRow } from "@vercel/postgres"
-
-type QueryResult<T extends QueryResultRow> = {
-  rows: T[]
-  rowCount: number
-}
+import { Pool, type QueryResult, type QueryResultRow } from "pg"
 
 class Database {
   private static instance: Database
-  private pool: ReturnType<typeof createPool> | undefined
+  private pool: Pool | undefined
 
   private constructor() { }
 
@@ -20,15 +15,12 @@ class Database {
 
   async query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
     if (!this.pool) {
-      this.pool = createPool({
+      this.pool = new Pool({
         connectionString: process.env.POSTGRES_URL || process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
       })
     }
-    const result = await this.pool.query<T>(text, params)
-    return {
-      rows: result.rows,
-      rowCount: result.rowCount || 0,
-    }
+    return this.pool.query<T>(text, params)
   }
 }
 
