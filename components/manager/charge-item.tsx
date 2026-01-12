@@ -30,6 +30,7 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [deleteError, setDeleteError] = useState<string | null>(null)
 
     const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" }> = {
         "PENDING": { label: "Pendente", variant: "secondary" },
@@ -41,14 +42,16 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
 
     const handleDelete = async () => {
         setIsDeleting(true)
+        setDeleteError(null)
         try {
             const res = await fetch(`/api/charges/${charge.id}`, {
                 method: "DELETE"
             })
 
             if (!res.ok) {
-                const err = await res.text()
-                throw new Error(err)
+                const errText = await res.text()
+                // Return clean error if possible
+                throw new Error(errText || "Erro ao excluir")
             }
 
             toast.success("Cobrança removida com sucesso")
@@ -58,8 +61,12 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
             }
             router.refresh()
         } catch (error) {
-            toast.error("Erro ao excluir: " + (error instanceof Error ? error.message : "Erro desconhecido"))
-            setIsDeleting(false) // Stop loading but keep dialog open to retry
+            console.error(error)
+            const msg = error instanceof Error ? error.message : "Erro desconhecido"
+            setDeleteError(msg)
+            toast.error("Falha ao excluir")
+        } finally {
+            setIsDeleting(false)
         }
     }
 
@@ -114,7 +121,10 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                     )}
 
                     {canDelete && (
-                        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <AlertDialog open={isDialogOpen} onOpenChange={(open) => {
+                            if (!isDeleting) setIsDialogOpen(open)
+                            if (!open) setDeleteError(null)
+                        }}>
                             <AlertDialogTrigger asChild>
                                 <Button
                                     size="sm"
@@ -133,9 +143,15 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                                         <strong>Atenção:</strong> Ela será removida permanentemente do sistema e também do Asaas. Esta ação não pode ser desfeita.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
+
+                                {deleteError && (
+                                    <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20 mt-2 break-words">
+                                        <strong>Erro:</strong> {deleteError}
+                                    </div>
+                                )}
+
                                 <AlertDialogFooter>
                                     <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
-                                    {/* Using standard Button instead of AlertDialogAction to control events manually */}
                                     <Button
                                         variant="destructive"
                                         onClick={handleDelete}
