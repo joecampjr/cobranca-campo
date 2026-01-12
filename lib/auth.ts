@@ -15,6 +15,7 @@ export interface User {
   role: UserRole
   status: string
   phone?: string
+  branch?: string
   commission_percentage?: number
   collection_goal?: number
 }
