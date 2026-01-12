@@ -18,7 +18,7 @@ const formSchema = z.object({
     name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
     amount: z.string().min(1, "Valor é obrigatório"),
     description: z.string().min(3, "Descrição necessária"),
-    paymentMethod: z.enum(["PIX", "BOLETO", "CREDIT_CARD"]),
+    paymentMethod: z.string().default("UNDEFINED"),
 })
 
 export default function NewChargePage() {
@@ -33,7 +33,7 @@ export default function NewChargePage() {
             name: "",
             amount: "",
             description: "",
-            paymentMethod: "PIX",
+            paymentMethod: "UNDEFINED",
         },
     })
 
@@ -209,7 +209,7 @@ export default function NewChargePage() {
                                 )}
                             />
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4">
                                 <FormField
                                     control={form.control}
                                     name="amount"
@@ -219,29 +219,6 @@ export default function NewChargePage() {
                                             <FormControl>
                                                 <Input placeholder="0,00" {...field} />
                                             </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="paymentMethod"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Forma Pagto</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <FormControl>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Selecione" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="PIX">PIX</SelectItem>
-                                                    <SelectItem value="BOLETO">Boleto</SelectItem>
-                                                    <SelectItem value="CREDIT_CARD">Cartão</SelectItem>
-                                                </SelectContent>
-                                            </Select>
                                             <FormMessage />
                                         </FormItem>
                                     )}

@@ -21,7 +21,8 @@ export async function POST(req: Request) {
 
         // 2. Parse body
         const body = await req.json()
-        const { cpf, name, amount, description, paymentMethod } = body
+        const { cpf, name, amount, description } = body
+        const paymentMethod = body.paymentMethod || "UNDEFINED"
 
         // 3. Setup Asaas
         // Fetch tenant settings
