@@ -1,10 +1,20 @@
-import { getCurrentUser } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { db } from "@/lib/db"
-import { ExternalLink, Calendar, User } from "lucide-react"
+import { ChargeItem } from "@/components/manager/charge-item"
+
+// ... existing imports ...
+
+// ... existing code ...
+
+{
+  charges.length === 0 ? (
+    <div className="text-center py-8 text-muted-foreground">
+      Nenhuma cobrança registrada ainda.
+    </div>
+  ) : (
+  charges.map((charge) => (
+    <ChargeItem key={charge.id} charge={charge} currentUserRole={user.role} />
+  ))
+)
+}
 
 async function getRecentCharges(user: any) {
   try {
