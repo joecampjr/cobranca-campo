@@ -13,9 +13,24 @@ import { MapPin, Bell, Menu, Settings, LogOut, User, Building2, Users, FileText 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { User as UserType } from "@/lib/auth"
+import { usePwaInstall } from "@/hooks/use-pwa-install"
+import { InstallModal } from "@/components/pwa/install-modal"
+import { useState } from "react"
+import { Download } from "lucide-react"
 
 export function AdminHeader({ user }: { user: UserType }) {
   const router = useRouter()
+
+  const { isSupported, isIOS, isInstalled, promptInstall } = usePwaInstall()
+  const [showInstallModal, setShowInstallModal] = useState(false)
+
+  const handleInstallClick = () => {
+    if (isIOS) {
+      setShowInstallModal(true)
+    } else {
+      promptInstall()
+    }
+  }
 
   const handleSignOut = async () => {
     await fetch("/api/auth/signout", { method: "POST" })
@@ -93,8 +108,20 @@ export function AdminHeader({ user }: { user: UserType }) {
                 <DropdownMenuItem asChild>
                   <Link href="/admin/reports">Relatórios</Link>
                 </DropdownMenuItem>
+
+                {(!isInstalled && (isSupported || isIOS)) && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={handleInstallClick}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Instalar App
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <InstallModal open={showInstallModal} onOpenChange={setShowInstallModal} />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
