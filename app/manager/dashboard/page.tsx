@@ -16,7 +16,7 @@ async function getRecentCharges(companyId: string) {
           c.created_at, 
           cust.name as customer_name, 
           cust.document as customer_cpf, 
-          c.invoice_url as asaas_invoice_url,
+          c.asaas_invoice_url,
           u.name as collector_name
       FROM charges c
       LEFT JOIN users u ON c.collector_id = u.id

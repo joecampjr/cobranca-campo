@@ -94,7 +94,7 @@ export async function POST(req: Request) {
         await db.query(
             `INSERT INTO charges 
         (company_id, customer_id, collector_id, description, amount, due_date, payment_method, 
-         status, asaas_payment_id, invoice_url, asaas_pix_code, asaas_pix_qr_code_url, created_at)
+         status, asaas_payment_id, asaas_invoice_url, asaas_pix_code, asaas_pix_qr_code_url, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`,
             [
                 user.company_id,
