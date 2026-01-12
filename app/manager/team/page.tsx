@@ -6,13 +6,22 @@ import { Plus, User, MapPin } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 
-async function getTeamMembers(companyId: string) {
-  const result = await db.query(`
+async function getTeamMembers(user: any) {
+  let query = `
     SELECT id, name, email, cpf, branch, created_at 
     FROM users 
     WHERE company_id = $1 AND role = 'collector'
-    ORDER BY created_at DESC
-  `, [companyId])
+  `
+  const params = [user.company_id]
+
+  if (user.role === 'manager' && user.branch) {
+    query += ` AND branch = $2`
+    params.push(user.branch)
+  }
+
+  query += ` ORDER BY created_at DESC`
+
+  const result = await db.query(query, params)
   return result.rows
 }
 
@@ -23,7 +32,7 @@ export default async function TeamPage() {
     redirect("/signin")
   }
 
-  const team = await getTeamMembers(user.company_id)
+  const team = await getTeamMembers(user)
 
   return (
     <main className="container mx-auto px-4 py-8">
