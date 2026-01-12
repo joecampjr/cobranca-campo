@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 export default async function RoutesPage() {
   const user = await getCurrentUser()
 
-  if (!user || user.role !== "manager") {
+  if (!user || !["manager", "company_admin"].includes(user.role)) {
     redirect("/signin")
   }
 

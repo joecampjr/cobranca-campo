@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 export default async function TeamPage() {
   const user = await getCurrentUser()
 
-  if (!user || user.role !== "manager") {
+  if (!user || !["manager", "company_admin"].includes(user.role)) {
     redirect("/signin")
   }
 
