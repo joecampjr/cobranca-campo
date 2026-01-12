@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
         // Insert new collector
         const result = await db.query(
-            `INSERT INTO users (name, email, password, role, company_id, cpf, branch, created_at, updated_at) 
+            `INSERT INTO users (name, email, password_hash, role, company_id, cpf, branch, created_at, updated_at) 
        VALUES ($1, $2, $3, 'collector', $4, $5, $6, NOW(), NOW()) 
        RETURNING id, name, email`,
             [name, email, hashedPassword, user.company_id, cpf, branch]
