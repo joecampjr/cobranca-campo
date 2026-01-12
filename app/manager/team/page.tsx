@@ -1,9 +1,20 @@
 import { getCurrentUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { Card } from "@/components/ui/card"
-import { TrendingUp, Target, DollarSign } from "lucide-react"
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Plus, User, MapPin } from "lucide-react"
+import Link from "next/link"
+import { db } from "@/lib/db"
+
+async function getTeamMembers(companyId: string) {
+  const result = await db.query(`
+    SELECT id, name, email, cpf, branch, created_at 
+    FROM users 
+    WHERE company_id = $1 AND role = 'collector'
+    ORDER BY created_at DESC
+  `, [companyId])
+  return result.rows
+}
 
 export default async function TeamPage() {
   const user = await getCurrentUser()
@@ -12,132 +23,63 @@ export default async function TeamPage() {
     redirect("/signin")
   }
 
-  // Mock data
-  const team = [
-    {
-      id: "1",
-      name: "Maria Santos",
-      email: "maria@empresa.com",
-      monthlyGoal: 15000.0,
-      monthlyAchieved: 12400.0,
-      todayCollections: 8,
-      todayAmount: 3200.0,
-      commission: 5,
-      status: "active",
-    },
-    {
-      id: "2",
-      name: "Pedro Oliveira",
-      email: "pedro@empresa.com",
-      monthlyGoal: 12000.0,
-      monthlyAchieved: 9800.0,
-      todayCollections: 6,
-      todayAmount: 2100.0,
-      commission: 5,
-      status: "active",
-    },
-    {
-      id: "3",
-      name: "Ana Costa",
-      email: "ana@empresa.com",
-      monthlyGoal: 10000.0,
-      monthlyAchieved: 8400.0,
-      todayCollections: 4,
-      todayAmount: 1600.0,
-      commission: 4.5,
-      status: "active",
-    },
-  ]
+  const team = await getTeamMembers(user.company_id)
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Minha Equipe</h1>
-        <p className="text-muted-foreground">Acompanhe o desempenho de cada cobrador</p>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Equipe de Campo</h1>
+          <p className="text-muted-foreground">Gerencie seus cobradores e suas filiais.</p>
+        </div>
+        <Link href="/manager/team/new">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Adicionar Membro
+          </Button>
+        </Link>
       </div>
 
       <div className="grid gap-6">
-        {team.map((member) => {
-          const goalPercentage = (member.monthlyAchieved / member.monthlyGoal) * 100
-          const commissionEarned = member.monthlyAchieved * (member.commission / 100)
+        {team.length === 0 ? (
+          <Card className="p-8 text-center text-muted-foreground">
+            Nenhum membro na equipe ainda. Adicione o primeiro!
+          </Card>
+        ) : (
+          team.map((member) => (
+            <Card key={member.id} className="overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 
-          return (
-            <Card key={member.id} className="p-6">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                <div className="flex items-start gap-4 flex-1">
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl font-semibold text-primary">{member.name.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{member.email}</p>
-
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div>
-                        <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                          <Target className="h-4 w-4" />
-                          <span className="text-sm">Meta Mensal</span>
-                        </div>
-                        <p className="text-lg font-semibold">
-                          R$ {member.monthlyGoal.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}
-                        </p>
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                          <TrendingUp className="h-4 w-4" />
-                          <span className="text-sm">Alcançado</span>
-                        </div>
-                        <p className="text-lg font-semibold">
-                          R$ {member.monthlyAchieved.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}
-                        </p>
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                          <DollarSign className="h-4 w-4" />
-                          <span className="text-sm">Comissão</span>
-                        </div>
-                        <p className="text-lg font-semibold">
-                          R$ {commissionEarned.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                        </p>
+                  <div className="flex items-start gap-4">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <User className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold">{member.name}</h3>
+                      <p className="text-sm text-muted-foreground">{member.email}</p>
+                      <div className="flex items-center gap-2 mt-1 text-sm bg-muted inline-flex px-2 py-0.5 rounded">
+                        <span className="font-mono">{member.cpf || "CPF não cadastrado"}</span>
                       </div>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <div className="text-sm text-muted-foreground flex items-center gap-1 justify-end">
+                        <MapPin className="h-3 w-3" />
+                        Filial
+                      </div>
+                      <div className="font-medium">{member.branch || "Matriz"}</div>
+                    </div>
+                    {/* Future: Edit/Delete buttons */}
+                  </div>
+
                 </div>
-
-                <div className="lg:w-64">
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between text-sm mb-2">
-                      <span className="font-medium">Progresso</span>
-                      <span className={goalPercentage >= 100 ? "text-accent" : "text-muted-foreground"}>
-                        {goalPercentage.toFixed(1)}%
-                      </span>
-                    </div>
-                    <div className="h-3 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all ${goalPercentage >= 100 ? "bg-accent" : "bg-primary"}`}
-                        style={{ width: `${Math.min(goalPercentage, 100)}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="bg-muted/50 rounded-lg p-3 mb-4">
-                    <p className="text-sm text-muted-foreground mb-1">Hoje</p>
-                    <p className="font-semibold">{member.todayCollections} cobranças</p>
-                    <p className="text-sm text-muted-foreground">
-                      R$ {member.todayAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                    </p>
-                  </div>
-
-                  <Link href={`/manager/team/${member.id}`}>
-                    <Button variant="outline" className="w-full bg-transparent">
-                      Ver Detalhes
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+              </CardContent>
             </Card>
-          )
-        })}
+          ))
+        )}
       </div>
     </main>
   )
