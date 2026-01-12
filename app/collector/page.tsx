@@ -6,6 +6,7 @@ import { Wallet, Clock, CheckCircle2, Plus, LogOut } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { formatCurrency } from "@/lib/utils"
+import { HeaderLogout } from "@/components/collector/header-logout"
 // import { SignOutButton } from "@/components/auth/signout-button" // If exists, or direct fetch
 
 export default async function CollectorHomePage() {
