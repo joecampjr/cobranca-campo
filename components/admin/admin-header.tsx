@@ -114,7 +114,7 @@ export function AdminHeader({ user }: { user: UserType }) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/admin/settings">
+                  <Link href="/manager/settings">
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </Link>
