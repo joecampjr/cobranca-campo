@@ -57,8 +57,26 @@ export default function NewChargePage() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
         try {
-            // Remove symbols from amount for API (R$ 1.000,00 -> 1000.00)
-            const numericAmount = parseFloat(values.amount.replace(/[^0-9,]/g, "").replace(",", "."))
+            // Flexible Amount Parsing:
+            // 1. Remove "R$" and spaces
+            let cleanAmount = values.amount.replace(/R\$\s?/, "").trim()
+
+            // 2. Identify separator
+            // If comma exists, treat as decimal separator, remove thousands dots
+            if (cleanAmount.includes(",")) {
+                cleanAmount = cleanAmount.replace(/\./g, "").replace(",", ".")
+            }
+            // If only dots, could be thousands or decimal. 
+            // 1.000 -> 1000. 10.50 -> 10.50
+            // Heuristic: If one dot and it's near the end (2 digits), assume decimal. Otherwise clean.
+            // Safer: Just replace everything that isn't digit or last separator.
+            // Given "Cobranca Campo" (Brazil), we optimize for Comma Decimal.
+
+            const numericAmount = parseFloat(cleanAmount)
+
+            if (isNaN(numericAmount) || numericAmount <= 0) {
+                throw new Error("Valor inválido. Use o formato 0,00")
+            }
 
             const response = await fetch("/api/charges", {
                 method: "POST",
@@ -81,6 +99,10 @@ export default function NewChargePage() {
             })
 
         } catch (error: any) {
+            console.error(error)
+            // Explicit alert for mobile users who might miss toast
+            alert(`Não foi possível gerar a cobrança:\n${error.message}`)
+
             toast({
                 variant: "destructive",
                 title: "Erro",
