@@ -99,7 +99,10 @@ export function ManagerHeader({ user, branding }: { user: UserType, branding?: {
                 <DropdownMenuLabel>
                   <div>
                     <p className="font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                    <p className="text-xs text-muted-foreground mb-1">{user.email}</p>
+                    <div className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80">
+                      {user.role === 'company_admin' ? 'Administrador' : user.role === 'manager' ? 'Gerente' : 'Cobrador'}
+                    </div>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
