@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button"
 import { db } from "@/lib/db"
 import { ExternalLink, Calendar, User } from "lucide-react"
 
-async function getRecentCharges(companyId: string) {
+async function getRecentCharges(user: any) {
   try {
-    const result = await db.query(`
+    let query = `
       SELECT 
           c.id, 
           c.amount, 
@@ -17,14 +17,24 @@ async function getRecentCharges(companyId: string) {
           cust.name as customer_name, 
           cust.document as customer_cpf, 
           c.asaas_invoice_url,
-          u.name as collector_name
+          u.name as collector_name,
+          u.branch as collector_branch
       FROM charges c
       LEFT JOIN users u ON c.collector_id = u.id
       LEFT JOIN customers cust ON c.customer_id = cust.id
       WHERE c.company_id = $1
-      ORDER BY c.created_at DESC
-      LIMIT 20
-    `, [companyId])
+    `
+    const params = [user.company_id]
+
+    // If manager, filter by their branch
+    if (user.role === 'manager' && user.branch) {
+      query += ` AND u.branch = $2`
+      params.push(user.branch)
+    }
+
+    query += ` ORDER BY c.created_at DESC LIMIT 20`
+
+    const result = await db.query(query, params)
 
     return { data: result.rows, error: null }
   } catch (error) {
@@ -40,7 +50,7 @@ export default async function ManagerDashboardPage() {
     redirect("/signin")
   }
 
-  const { data: charges, error } = await getRecentCharges(user.company_id)
+  const { data: charges, error } = await getRecentCharges(user)
 
   const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" }> = {
     "PENDING": { label: "Pendente", variant: "secondary" },
