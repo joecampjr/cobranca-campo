@@ -2,18 +2,31 @@
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Calendar, User, Trash2, Loader2 } from "lucide-react"
+import { ExternalLink, Calendar, User, Trash2, Loader2, MapPin } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { formatCurrency } from "@/lib/utils"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface ChargeItemProps {
     charge: any
     currentUserRole: string
+    companyName?: string
+    onDelete?: () => void
 }
 
-export function ChargeItem({ charge, currentUserRole }: ChargeItemProps) {
+export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: ChargeItemProps) {
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
 
@@ -22,11 +35,10 @@ export function ChargeItem({ charge, currentUserRole }: ChargeItemProps) {
         "RECEIVED": { label: "Pago", variant: "success" },
         "CONFIRMED": { label: "Confirmado", variant: "success" },
         "OVERDUE": { label: "Vencido", variant: "destructive" },
+        "CANCELLED": { label: "Cancelado", variant: "outline" },
     }
 
     const handleDelete = async () => {
-        if (!confirm("Tem certeza que deseja excluir esta cobrança? Ela será removida também do Asaas.")) return
-
         setIsDeleting(true)
         try {
             const res = await fetch(`/api/charges/${charge.id}`, {
@@ -39,6 +51,9 @@ export function ChargeItem({ charge, currentUserRole }: ChargeItemProps) {
             }
 
             toast.success("Cobrança removida com sucesso")
+            if (onDelete) {
+                onDelete()
+            }
             router.refresh()
         } catch (error) {
             toast.error("Erro ao excluir: " + (error instanceof Error ? error.message : "Erro desconhecido"))
@@ -63,6 +78,13 @@ export function ChargeItem({ charge, currentUserRole }: ChargeItemProps) {
                         <User className="h-3 w-3" />
                         <span>Cobrador: {charge.collector_name || "N/A"}</span>
                     </div>
+                    {/* Display Branch */}
+                    {charge.collector_branch && (
+                        <div className="flex items-center gap-1 text-primary/80 font-medium">
+                            <MapPin className="h-3 w-3" />
+                            <span>{charge.collector_branch}</span>
+                        </div>
+                    )}
                     <div className="flex items-center gap-1">
                         <div className="font-mono">{charge.customer_cpf}</div>
                     </div>
@@ -92,15 +114,40 @@ export function ChargeItem({ charge, currentUserRole }: ChargeItemProps) {
                     )}
 
                     {canDelete && (
-                        <Button
-                            size="sm"
-                            variant="destructive"
-                            className="h-9 w-9 p-0"
-                            onClick={handleDelete}
-                            disabled={isDeleting}
-                        >
-                            {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    className="h-9 w-9 p-0"
+                                    disabled={isDeleting}
+                                >
+                                    {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{companyName || "Sistema"} diz:</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Tem certeza que deseja excluir esta cobrança?
+                                        <br /><br />
+                                        <strong>Atenção:</strong> Ela será removida permanentemente do sistema e também do Asaas. Esta ação não pode ser desfeita.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            handleDelete()
+                                        }}
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                        Sim, Excluir
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     )}
                 </div>
             </div>

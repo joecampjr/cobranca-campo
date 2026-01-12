@@ -1,12 +1,12 @@
 import { getCurrentUser } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { db } from "@/lib/db"
-import { ChargeItem } from "@/components/manager/charge-item"
+import { DashboardView } from "@/components/manager/dashboard-view"
 
-async function getRecentCharges(user: any) {
+async function getDashboardData(user: any) {
   try {
-    let query = `
+    // 1. Get recent charges
+    let chargeQuery = `
       SELECT 
           c.id, 
           c.amount, 
@@ -22,22 +22,45 @@ async function getRecentCharges(user: any) {
       LEFT JOIN customers cust ON c.customer_id = cust.id
       WHERE c.company_id = $1
     `
-    const params = [user.company_id]
+    const chargeParams = [user.company_id]
 
     // If manager, filter by their branch
     if (user.role === 'manager' && user.branch) {
-      query += ` AND u.branch = $2`
-      params.push(user.branch)
+      chargeQuery += ` AND u.branch = $2`
+      chargeParams.push(user.branch)
     }
 
-    query += ` ORDER BY c.created_at DESC LIMIT 20`
+    chargeQuery += ` ORDER BY c.created_at DESC LIMIT 50` // Increased limit for filter utility
 
-    const result = await db.query(query, params)
+    const chargeResult = await db.query(chargeQuery, chargeParams)
 
-    return { data: result.rows, error: null }
+    // 2. Get active branches for filtering
+    let branchQuery = `
+        SELECT DISTINCT branch 
+        FROM users 
+        WHERE company_id = $1 AND role = 'collector' AND branch IS NOT NULL AND branch != ''
+    `
+    const branchParams = [user.company_id]
+    if (user.role === 'manager' && user.branch) {
+      branchQuery += ` AND branch = $2`
+      branchParams.push(user.branch)
+    }
+    const branchResult = await db.query(branchQuery, branchParams)
+    const branches = branchResult.rows.map(r => r.branch)
+
+    // 3. Get Branding
+    const brandRes = await db.query("SELECT display_name FROM companies WHERE id = $1", [user.company_id])
+    const companyName = brandRes.rows[0]?.display_name || "Cobrança em Campo"
+
+    return {
+      charges: chargeResult.rows,
+      branches,
+      companyName,
+      error: null
+    }
   } catch (error) {
     console.error("Dashboard SQL Error:", error)
-    return { data: [], error: error instanceof Error ? error.message : String(error) }
+    return { charges: [], branches: [], companyName: "", error: error instanceof Error ? error.message : String(error) }
   }
 }
 
@@ -48,7 +71,18 @@ export default async function ManagerDashboardPage() {
     redirect("/signin")
   }
 
-  const { data: charges, error } = await getRecentCharges(user)
+  const { charges, branches, companyName, error } = await getDashboardData(user)
+
+  if (error) {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Erro: </strong>
+          <span className="block sm:inline">{error}</span>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -57,32 +91,12 @@ export default async function ManagerDashboardPage() {
         <p className="text-muted-foreground">Acompanhamento em tempo real das cobranças geradas.</p>
       </div>
 
-      {error ? (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-          <strong className="font-bold">Erro no Banco de Dados: </strong>
-          <span className="block sm:inline">{error}</span>
-        </div>
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>Últimas Cobranças</CardTitle>
-            <CardDescription>Lista das últimas 20 cobranças geradas pela equipe.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {charges.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  Nenhuma cobrança registrada ainda.
-                </div>
-              ) : (
-                charges.map((charge) => (
-                  <ChargeItem key={charge.id} charge={charge} currentUserRole={user.role} />
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <DashboardView
+        initialCharges={charges}
+        branches={branches}
+        currentUserRole={user.role}
+        companyName={companyName}
+      />
     </main>
   )
 }
