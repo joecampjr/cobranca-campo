@@ -11,13 +11,17 @@ export async function POST(req: Request) {
         const token = cookieStore.get("session_token")?.value
 
         if (!token) {
+            console.log("POST /charges: No token provided")
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         const user = await getUserFromSession(token)
         if (!user) {
+            console.log("POST /charges: Invalid session for token")
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
+
+        console.log(`POST /charges: User ${user.id} (${user.role}) Company: ${user.company_id}`)
 
         // 2. Parse body
         const body = await req.json()
@@ -25,13 +29,18 @@ export async function POST(req: Request) {
         const paymentMethod = body.paymentMethod || "UNDEFINED"
 
         // 3. Setup Asaas
-        // Fetch tenant settings
-        const companyRes = await db.query("SELECT asaas_api_key FROM companies WHERE id = $1", [user.company_id])
-        const companyApiKey = companyRes.rows[0]?.asaas_api_key
+        let companyApiKey = null
+        if (user.company_id) {
+            const companyRes = await db.query("SELECT asaas_api_key FROM companies WHERE id = $1", [user.company_id])
+            companyApiKey = companyRes.rows[0]?.asaas_api_key
+        } else {
+            console.warn(`User ${user.id} has no company_id`)
+        }
 
         const apiKey = companyApiKey || process.env.ASAAS_API_KEY
         if (!apiKey) {
-            return NextResponse.json({ error: "Configuração de pagamento não encontrada. Contate o administrador." }, { status: 400 })
+            console.warn(`No API Key found for Company ${user.company_id}`)
+            return NextResponse.json({ error: `Configuração de pagamento incompleta. Empresa ${user.company_id ? 'sem chave API' : 'não vinculada'}. Contate o administrador.` }, { status: 400 })
         }
 
         const asaas = getAsaasClient(apiKey)
@@ -56,9 +65,9 @@ export async function POST(req: Request) {
                     })
                     asaasCustomerId = asaasCustomer.id
                 }
-            } catch (e) {
+            } catch (e: any) {
                 console.error("Error managing Asaas customer", e)
-                throw new Error("Erro ao comunicar com o Asaas para cadastro de cliente")
+                throw new Error(`Erro ao comunicar com o Asaas para cadastro de cliente: ${e.message}`)
             }
         }
 
