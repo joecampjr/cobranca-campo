@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, LogOut } from "lucide-react"
+import { Loader2, LogOut, Download } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { usePwaInstall } from "@/hooks/use-pwa-install"
+import { InstallModal } from "@/components/pwa/install-modal"
 
 export default function CollectorProfilePage() {
     const router = useRouter()
@@ -15,6 +17,17 @@ export default function CollectorProfilePage() {
     const [currentPassword, setCurrentPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    const { isSupported, isIOS, isInstalled, promptInstall } = usePwaInstall()
+    const [showInstallModal, setShowInstallModal] = useState(false)
+
+    const handleInstallClick = () => {
+        if (isIOS) {
+            setShowInstallModal(true)
+        } else {
+            promptInstall()
+        }
+    }
 
     async function handleChangePassword(e: React.FormEvent) {
         e.preventDefault()
@@ -57,6 +70,25 @@ export default function CollectorProfilePage() {
             <header className="pb-4 border-b">
                 <h1 className="text-xl font-bold">Meu Perfil</h1>
             </header>
+
+            {(!isInstalled && (isSupported || isIOS)) && (
+                <Card className="bg-primary/5 border-primary/20">
+                    <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center">
+                            <Download className="mr-2 h-5 w-5 text-primary" />
+                            Instalar Aplicativo
+                        </CardTitle>
+                        <CardDescription>
+                            Instale o app para acesso rápido e offline.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Button onClick={handleInstallClick} className="w-full">
+                            Instalar Agora
+                        </Button>
+                    </CardContent>
+                </Card>
+            )}
 
             <Card>
                 <CardHeader>
@@ -110,6 +142,8 @@ export default function CollectorProfilePage() {
                 <LogOut className="mr-2 h-4 w-4" />
                 Sair da Conta
             </Button>
+
+            <InstallModal open={showInstallModal} onOpenChange={setShowInstallModal} />
         </div>
     )
 }

@@ -99,13 +99,13 @@ export function ManagerHeader({ user, branding }: { user: UserType, branding?: {
                   <Link href="/manager/reports">Relatórios</Link>
                 </DropdownMenuItem>
                 {(!isInstalled && (isSupported || isIOS)) && (
-                   <>
+                  <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onSelect={handleInstallClick}>
                       <Download className="h-4 w-4 mr-2" />
                       Instalar App
                     </DropdownMenuItem>
-                   </>
+                  </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -146,8 +146,7 @@ export function ManagerHeader({ user, branding }: { user: UserType, branding?: {
           </div>
         </div>
       </div>
-      </div>
       <InstallModal open={showInstallModal} onOpenChange={setShowInstallModal} />
-    </header >
+    </header>
   )
 }
