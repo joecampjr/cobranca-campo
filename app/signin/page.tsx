@@ -41,7 +41,7 @@ export default function SignInPage() {
       if (data.user.role === "super_admin") {
         router.push("/admin")
       } else if (data.user.role === "company_admin") {
-        router.push("/admin/dashboard")
+        router.push("/manager/dashboard")
       } else if (data.user.role === "manager") {
         router.push("/manager/dashboard")
       } else if (data.user.role === "collector") {
