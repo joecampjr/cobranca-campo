@@ -51,6 +51,23 @@ export async function POST(req: Request) {
         let customer = customerResult.rows[0]
         let asaasCustomerId = customer?.asaas_customer_id
 
+        if (asaasCustomerId) {
+            // Validate existing ID against Asaas (Check if deleted)
+            try {
+                const asaasCustomerData = await asaas.getCustomer(asaasCustomerId)
+                if (asaasCustomerData.deleted) {
+                    console.log(`Customer ${asaasCustomerId} is deleted in Asaas. Restoring...`)
+                    await asaas.restoreCustomer(asaasCustomerId)
+                }
+            } catch (e: any) {
+                console.warn(`Stored AsaasCustomerID ${asaasCustomerId} invalid or unreachable: ${e.message}`)
+                // If 404, the ID is bad. Clear it so we can find/create a new one.
+                if (e.message && (e.message.includes("404") || e.message.includes("not found"))) {
+                    asaasCustomerId = null
+                }
+            }
+        }
+
         if (!asaasCustomerId) {
             // Check if exists in Asaas first (to duplicate/error avoidance)
             try {
@@ -62,8 +79,6 @@ export async function POST(req: Request) {
                             console.log(`Restored deleted Asaas customer: ${existingAsaasCustomer.id}`)
                         } catch (restoreError) {
                             console.error("Failed to restore customer", restoreError)
-                            // Tries to create new one? No, Asaas blocks duplication.
-                            // We hope restore works or we can't proceed.
                             throw new Error("Cliente está removido no Asaas e não foi possível restaurá-lo.")
                         }
                     }
@@ -90,7 +105,8 @@ export async function POST(req: Request) {
                 [user.company_id, name, cpf, asaasCustomerId]
             )
             customer = { id: newCustomer.rows[0].id }
-        } else if (!customer.asaas_customer_id) {
+        } else if (customer.asaas_customer_id !== asaasCustomerId) {
+            // Update if ID changed (e.g. was null or invalid and we found a new one)
             await db.query("UPDATE customers SET asaas_customer_id = $1 WHERE id = $2", [asaasCustomerId, customer.id])
         }
 
