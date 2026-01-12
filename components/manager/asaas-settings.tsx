@@ -66,38 +66,38 @@ export function AsaasSettings({ initialApiKey }: { initialApiKey?: string }) {
                         </p>
                     </div>
 
-                </div>
 
-                <div className="space-y-2">
-                    <Label>URL do Webhook (Para notificações de pagamento)</Label>
-                    <div className="flex gap-2">
-                        <Input
-                            readOnly
-                            value="https://cobranca-campo.vercel.app/api/webhooks/asaas"
-                            className="bg-muted"
-                        />
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => {
-                                navigator.clipboard.writeText("https://cobranca-campo.vercel.app/api/webhooks/asaas")
-                                toast.success("URL copiada!")
-                            }}
-                        >
-                            Copiar
-                        </Button>
+
+                    <div className="space-y-2">
+                        <Label>URL do Webhook (Para notificações de pagamento)</Label>
+                        <div className="flex gap-2">
+                            <Input
+                                readOnly
+                                value="https://cobranca-campo.vercel.app/api/webhooks/asaas"
+                                className="bg-muted"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                    navigator.clipboard.writeText("https://cobranca-campo.vercel.app/api/webhooks/asaas")
+                                    toast.success("URL copiada!")
+                                }}
+                            >
+                                Copiar
+                            </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            Configure esta URL no Asaas para que o sistema receba confirmações de pagamento automaticamente.
+                        </p>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                        Configure esta URL no Asaas para que o sistema receba confirmações de pagamento automaticamente.
-                    </p>
-                </div>
 
-                <Button type="submit" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Salvar Configurações
-                </Button>
-            </form>
-        </CardContent>
+                    <Button type="submit" disabled={isLoading}>
+                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Salvar Configurações
+                    </Button>
+                </form>
+            </CardContent>
         </Card >
     )
 }
