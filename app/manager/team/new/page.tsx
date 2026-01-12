@@ -71,7 +71,20 @@ export default function NewMemberPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="cpf">CPF</Label>
-                                <Input id="cpf" name="cpf" placeholder="000.000.000-00" />
+                                <Input
+                                    id="cpf"
+                                    name="cpf"
+                                    placeholder="000.000.000-00"
+                                    maxLength={14}
+                                    onChange={(e) => {
+                                        let value = e.target.value.replace(/\D/g, "")
+                                        if (value.length > 11) value = value.slice(0, 11)
+                                        value = value.replace(/(\d{3})(\d)/, "$1.$2")
+                                        value = value.replace(/(\d{3})(\d)/, "$1.$2")
+                                        value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+                                        e.target.value = value
+                                    }}
+                                />
                             </div>
 
                             <div className="space-y-2">
