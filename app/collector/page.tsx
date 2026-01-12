@@ -67,7 +67,8 @@ export default async function CollectorHomePage() {
           </div>
         </div>
 
-        {/* SignOut - maybe moving to profile, but good to have access? Or just keep it clean */}
+
+        <HeaderLogout />
       </header>
 
       {/* Stats Cards */}
