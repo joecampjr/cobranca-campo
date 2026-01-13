@@ -67,10 +67,16 @@ export async function DELETE(
 
                         console.error("Asaas Delete Error:", errorText)
 
-                        if (!force) {
-                            return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
+                        // Check for common "not found" or "already deleted" messages
+                        const lowerError = errorText.toLowerCase()
+                        if (lowerError.includes("not found") || lowerError.includes("encontrada") || lowerError.includes("deleted") || lowerError.includes("removida")) {
+                            console.log("Charge considered deleted/not found in Asaas based on error message. Proceeding.")
+                        } else {
+                            if (!force) {
+                                return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
+                            }
+                            console.warn(`[Force Delete] Ignoring Asaas error for charge ${chargeId}: ${errorText}`)
                         }
-                        console.warn(`[Force Delete] Ignoring Asaas error for charge ${chargeId}: ${errorText}`)
                     }
                 }
             }
