@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DeveloperFooter } from "@/components/developer-footer"
 import { Loader2, LogOut, Download } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -144,6 +145,10 @@ export default function CollectorProfilePage() {
             </Button>
 
             <InstallModal open={showInstallModal} onOpenChange={setShowInstallModal} />
+
+            <div className="mt-8 mb-20">
+                <DeveloperFooter />
+            </div>
         </div>
     )
 }

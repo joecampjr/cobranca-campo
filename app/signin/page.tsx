@@ -10,6 +10,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { MapPin } from "lucide-react"
+import { DeveloperFooter } from "@/components/developer-footer"
 
 export default function SignInPage() {
   const router = useRouter()
@@ -121,6 +122,10 @@ export default function SignInPage() {
           </Link>
         </div>
       </Card>
+
+      <div className="fixed bottom-0 w-full">
+        <DeveloperFooter />
+      </div>
     </div>
   )
 }
