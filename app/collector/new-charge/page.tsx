@@ -9,7 +9,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Copy, Share2, CheckCircle2, ExternalLink } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { CalendarIcon, Loader2, Copy, Share2, CheckCircle2, ExternalLink } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { formatCurrency } from "@/lib/utils"
 
@@ -19,6 +24,9 @@ const formSchema = z.object({
     amount: z.string().min(1, "Valor é obrigatório"),
     description: z.string().min(3, "Descrição necessária"),
     paymentMethod: z.string().default("UNDEFINED"),
+    dueDate: z.date({
+        required_error: "Data de vencimento é obrigatória",
+    }),
 })
 
 export default function NewChargePage() {
@@ -34,6 +42,7 @@ export default function NewChargePage() {
             amount: "",
             description: "",
             paymentMethod: "UNDEFINED",
+            dueDate: new Date(new Date().setDate(new Date().getDate() + 3)), // Default 3 days
         },
     })
 
@@ -84,7 +93,8 @@ export default function NewChargePage() {
                 body: JSON.stringify({
                     ...values,
                     amount: numericAmount,
-                    cpf: values.cpf.replace(/\D/g, "") // Send clean CPF
+                    cpf: values.cpf.replace(/\D/g, ""), // Send clean CPF
+                    dueDate: values.dueDate.toISOString(), // Send ISO date
                 }),
             })
 
@@ -250,6 +260,49 @@ export default function NewChargePage() {
                                     )}
                                 />
                             </div>
+
+                            <FormField
+                                control={form.control}
+                                name="dueDate"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Data de Vencimento</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, "PPP", { locale: ptBR })
+                                                        ) : (
+                                                            <span>Selecione uma data</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled={(date) =>
+                                                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                                                    }
+                                                    initialFocus
+                                                    locale={ptBR}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}

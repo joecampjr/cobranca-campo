@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
         // 2. Parse body
         const body = await req.json()
-        const { cpf, name, amount, description } = body
+        const { cpf, name, amount, description, dueDate: dueDateString } = body
         const paymentMethod = body.paymentMethod || "UNDEFINED"
 
         // 3. Setup Asaas
@@ -111,8 +111,14 @@ export async function POST(req: Request) {
         }
 
         // 5. Create Payment in Asaas
-        const dueDate = new Date()
-        dueDate.setDate(dueDate.getDate() + 3) // Default due date 3 days from now
+        // Use provided dueDate or default to 3 days from now
+        let dueDate: Date
+        if (dueDateString) {
+            dueDate = new Date(dueDateString)
+        } else {
+            dueDate = new Date()
+            dueDate.setDate(dueDate.getDate() + 3)
+        }
 
         const asaasPayment = await asaas.createPayment({
             customer: asaasCustomerId,

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Calendar, User, Trash2, Loader2, MapPin } from "lucide-react"
+import { ExternalLink, Calendar, User, Trash2, Loader2, MapPin, Clock } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
@@ -35,10 +35,10 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
     const [deleteError, setDeleteError] = useState<string | null>(null)
     const [forceDelete, setForceDelete] = useState(false)
 
-    const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" }> = {
+    const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
         "PENDING": { label: "Pendente", variant: "secondary" },
-        "RECEIVED": { label: "Pago", variant: "success" },
-        "CONFIRMED": { label: "Confirmado", variant: "success" },
+        "RECEIVED": { label: "Pago", variant: "default" },
+        "CONFIRMED": { label: "Confirmado", variant: "default" },
         "OVERDUE": { label: "Vencido", variant: "destructive" },
         "CANCELLED": { label: "Cancelado", variant: "outline" },
     }
@@ -102,8 +102,14 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                     </div>
                     <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
-                        <span>{new Date(charge.created_at).toLocaleString("pt-BR")}</span>
+                        <span>Criado: {new Date(charge.created_at).toLocaleDateString("pt-BR")}</span>
                     </div>
+                    {charge.due_date && (
+                        <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400 font-medium">
+                            <Clock className="h-3 w-3" />
+                            <span>Vence: {new Date(charge.due_date).toLocaleDateString("pt-BR")}</span>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -198,6 +204,6 @@ export function ChargeItem({ charge, currentUserRole, companyName, onDelete }: C
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

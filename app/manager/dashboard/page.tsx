@@ -12,6 +12,7 @@ async function getDashboardData(user: any) {
           c.amount, 
           c.status, 
           c.created_at, 
+          c.due_date,
           cust.name as customer_name, 
           cust.document as customer_cpf, 
           c.asaas_invoice_url,

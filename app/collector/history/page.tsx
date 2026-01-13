@@ -57,6 +57,11 @@ export default async function CollectorHistoryPage() {
                       <h3 className="font-semibold">{item.customer_name}</h3>
                       <p className="text-sm text-muted-foreground">
                         {new Date(item.created_at).toLocaleDateString("pt-BR")} às {new Date(item.created_at).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}
+                        {item.due_date && (
+                          <span className="block text-xs text-orange-600 font-medium mt-1">
+                            Vence: {new Date(item.due_date).toLocaleDateString("pt-BR")}
+                          </span>
+                        )}
                       </p>
                     </div>
                     <Badge variant={item.status === 'pending' ? "outline" : "default"}>
