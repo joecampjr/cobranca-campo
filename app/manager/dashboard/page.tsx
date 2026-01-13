@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { db } from "@/lib/db"
 import { DashboardView } from "@/components/manager/dashboard-view"
 import { DeveloperFooter } from "@/components/developer-footer"
+import { AutoRefresh } from "@/components/auto-refresh"
 
 async function getDashboardData(user: any) {
   try {
@@ -103,6 +104,7 @@ export default async function ManagerDashboardPage() {
       <div className="mt-12 mb-4 border-t pt-8">
         <DeveloperFooter />
       </div>
+      <AutoRefresh />
     </main>
   )
 }

@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card"
 import { CheckCircle2, Clock, XCircle } from "lucide-react" // Added icons for status
 import { Badge } from "@/components/ui/badge"
 import { db } from "@/lib/db"
+import { AutoRefresh } from "@/components/auto-refresh"
 import { formatCurrency } from "@/lib/utils"
 
 export default async function CollectorHistoryPage() {
@@ -82,6 +83,7 @@ export default async function CollectorHistoryPage() {
           ))}
         </main>
       )}
+      <AutoRefresh />
     </div>
   )
 }

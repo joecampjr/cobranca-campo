@@ -5,6 +5,7 @@ import { AsaasSettings } from "@/components/manager/asaas-settings"
 import { BrandingTab } from "./branding-tab"
 import { BranchesTab } from "./branches-tab"
 import { SecurityTab } from "./security-tab"
+import { DataTab } from "./data-tab"
 import { db } from "@/lib/db"
 
 async function getCompanySettings(companyId: string) {
@@ -31,6 +32,7 @@ export default async function SettingsPage() {
                     <TabsTrigger value="branches">Filiais</TabsTrigger>
                     <TabsTrigger value="branding">Identidade Visual</TabsTrigger>
                     <TabsTrigger value="security">Segurança</TabsTrigger>
+                    <TabsTrigger value="data">Dados</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="asaas">
@@ -47,6 +49,10 @@ export default async function SettingsPage() {
 
                 <TabsContent value="security">
                     <SecurityTab />
+                </TabsContent>
+
+                <TabsContent value="data">
+                    <DataTab />
                 </TabsContent>
             </Tabs>
         </main>
