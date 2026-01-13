@@ -16,36 +16,41 @@ async function getCompanySettings(companyId: string) {
 export default async function SettingsPage() {
     const user = await getCurrentUser()
 
-    if (!user || user.role !== "company_admin") {
+    if (!user || !["company_admin", "manager"].includes(user.role)) {
         redirect("/manager/dashboard")
     }
 
     const company = await getCompanySettings(user.company_id)
+    const isAdmin = user.role === "company_admin"
 
     return (
         <main className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-8">Configurações</h1>
 
-            <Tabs defaultValue="asaas" className="space-y-4">
+            <Tabs defaultValue={isAdmin ? "asaas" : "data"} className="space-y-4">
                 <TabsList>
-                    <TabsTrigger value="asaas">Integração Asaas</TabsTrigger>
-                    <TabsTrigger value="branches">Filiais</TabsTrigger>
-                    <TabsTrigger value="branding">Identidade Visual</TabsTrigger>
+                    {isAdmin && <TabsTrigger value="asaas">Integração Asaas</TabsTrigger>}
+                    {isAdmin && <TabsTrigger value="branches">Filiais</TabsTrigger>}
+                    {isAdmin && <TabsTrigger value="branding">Identidade Visual</TabsTrigger>}
                     <TabsTrigger value="security">Segurança</TabsTrigger>
                     <TabsTrigger value="data">Dados</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="asaas">
-                    <AsaasSettings initialApiKey={company?.asaas_api_key} />
-                </TabsContent>
+                {isAdmin && (
+                    <>
+                        <TabsContent value="asaas">
+                            <AsaasSettings initialApiKey={company?.asaas_api_key} />
+                        </TabsContent>
 
-                <TabsContent value="branches">
-                    <BranchesTab />
-                </TabsContent>
+                        <TabsContent value="branches">
+                            <BranchesTab />
+                        </TabsContent>
 
-                <TabsContent value="branding">
-                    <BrandingTab initialName={company?.display_name} initialLogo={company?.logo_url} />
-                </TabsContent>
+                        <TabsContent value="branding">
+                            <BrandingTab initialName={company?.display_name} initialLogo={company?.logo_url} />
+                        </TabsContent>
+                    </>
+                )}
 
                 <TabsContent value="security">
                     <SecurityTab />

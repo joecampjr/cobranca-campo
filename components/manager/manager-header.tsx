@@ -130,12 +130,14 @@ export function ManagerHeader({ user, branding }: { user: UserType, branding?: {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/manager/settings">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configurações
-                  </Link>
-                </DropdownMenuItem>
+                {(user.role === 'company_admin' || user.role === 'manager') && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/manager/settings">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Configurações
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="h-4 w-4 mr-2" />

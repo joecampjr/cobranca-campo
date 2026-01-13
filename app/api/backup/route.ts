@@ -6,7 +6,7 @@ export async function GET() {
     try {
         const user = await getCurrentUser()
 
-        if (!user || user.role !== "company_admin") {
+        if (!user || !["company_admin", "manager"].includes(user.role)) {
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
