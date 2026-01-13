@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { getAsaasClient } from "@/lib/asaas"
 import { NextResponse } from "next/server"
 
 export async function DELETE(
@@ -50,33 +51,22 @@ export async function DELETE(
         } else {
             // Delete in Asaas
             if (charge.asaas_payment_id) {
-                const asaasResponse = await fetch(`https://www.asaas.com/api/v3/payments/${charge.asaas_payment_id}`, {
-                    method: "DELETE",
-                    headers: {
-                        "access_token": apiKey
-                    }
-                })
+                const asaas = getAsaasClient(apiKey)
 
-                if (!asaasResponse.ok) {
-                    if (asaasResponse.status === 404) {
-                        // Already deleted in Asaas, proceed to delete local
-                        console.log("Charge already deleted in Asaas")
+                try {
+                    await asaas.cancelPayment(charge.asaas_payment_id)
+                } catch (error: any) {
+                    const errorText = error.message
+                    console.error("Asaas Delete Error:", errorText)
+
+                    const lowerError = errorText.toLowerCase()
+                    if (lowerError.includes("not found") || lowerError.includes("encontrada") || lowerError.includes("deleted") || lowerError.includes("removida")) {
+                        console.log("Charge considered deleted/not found in Asaas based on error message. Proceeding.")
                     } else {
-                        const errorJson = await asaasResponse.json().catch(() => null)
-                        const errorText = errorJson?.errors?.[0]?.description || await asaasResponse.text() || "Erro desconhecido no Asaas"
-
-                        console.error("Asaas Delete Error:", errorText)
-
-                        // Check for common "not found" or "already deleted" messages
-                        const lowerError = errorText.toLowerCase()
-                        if (lowerError.includes("not found") || lowerError.includes("encontrada") || lowerError.includes("deleted") || lowerError.includes("removida")) {
-                            console.log("Charge considered deleted/not found in Asaas based on error message. Proceeding.")
-                        } else {
-                            if (!force) {
-                                return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
-                            }
-                            console.warn(`[Force Delete] Ignoring Asaas error for charge ${chargeId}: ${errorText}`)
+                        if (!force) {
+                            return new NextResponse(`Asaas Error: ${errorText}`, { status: 502 })
                         }
+                        console.warn(`[Force Delete] Ignoring Asaas error for charge ${chargeId}: ${errorText}`)
                     }
                 }
             }
