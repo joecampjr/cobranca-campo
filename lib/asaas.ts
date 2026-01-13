@@ -72,8 +72,10 @@ class AsaasClient {
       config.environment === "production" ? "https://www.asaas.com/api/v3" : "https://sandbox.asaas.com/api/v3"
   }
 
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+  private async request<T>(endpoint: string, options: RequestInit = {}, retryCount = 0): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`
+
+    const response = await fetch(url, {
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -94,6 +96,24 @@ class AsaasClient {
         }
       } catch (e) {
         // response was not json
+      }
+
+      // Smart Environment Switching
+      // If error indicates environment mismatch, try the other environment once
+      if (retryCount === 0 && (
+        errorMessage.includes("pertenece a este ambiente") ||
+        errorMessage.includes("belong to this environment") ||
+        errorMessage.includes("chave de API informada")
+      )) {
+        console.warn(`Asaas Environment Mismatch detected. Switching environment and retrying... (Current: ${this.baseUrl})`)
+
+        if (this.baseUrl.includes("sandbox")) {
+          this.baseUrl = "https://www.asaas.com/api/v3"
+        } else {
+          this.baseUrl = "https://sandbox.asaas.com/api/v3"
+        }
+
+        return this.request<T>(endpoint, options, retryCount + 1)
       }
 
       throw new Error(`Asaas API Error: ${errorMessage}`)
