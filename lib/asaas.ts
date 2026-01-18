@@ -241,9 +241,14 @@ class AsaasClient {
   }
 
   // Webhook validation
-  validateWebhook(payload: string, signature: string, secret: string): boolean {
-    // Implement webhook signature validation
-    // This is a simplified version - implement proper HMAC validation in production
+  validateWebhook(request: Request, secret?: string): boolean {
+    const headerToken = request.headers.get("asaas-access-token")
+    const validToken = secret || process.env.ASAAS_WEBHOOK_TOKEN || this.apiKey
+
+    if (!headerToken || headerToken !== validToken) {
+      return false
+    }
+
     return true
   }
 }

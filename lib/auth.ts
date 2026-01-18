@@ -44,30 +44,42 @@ function generateToken(): string {
     .join("")
 }
 
+// Hash token for database storage
+async function hashToken(token: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(token)
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("")
+}
+
 // Create session
 export async function createSession(userId: string): Promise<string> {
   const token = generateToken()
+  const hashedToken = await hashToken(token)
   const expiresAt = new Date(Date.now() + SESSION_DURATION)
 
-  await db.query("INSERT INTO sessions (user_id, token, expires_at) VALUES ($1, $2, $3)", [userId, token, expiresAt])
+  await db.query("INSERT INTO sessions (user_id, token, expires_at) VALUES ($1, $2, $3)", [userId, hashedToken, expiresAt])
 
   return token
 }
 
 // Get session
 export async function getSession(token: string): Promise<Session | null> {
-  const result = await db.query<Session>("SELECT * FROM sessions WHERE token = $1 AND expires_at > NOW()", [token])
+  const hashedToken = await hashToken(token)
+  const result = await db.query<Session>("SELECT * FROM sessions WHERE token = $1 AND expires_at > NOW()", [hashedToken])
 
   return result.rows[0] || null
 }
 
 // Get user from session
 export async function getUserFromSession(token: string): Promise<User | null> {
+  const hashedToken = await hashToken(token)
   const result = await db.query<User>(
     `SELECT u.* FROM users u
      JOIN sessions s ON s.user_id = u.id
      WHERE s.token = $1 AND s.expires_at > NOW()`,
-    [token],
+    [hashedToken],
   )
 
   return result.rows[0] || null
@@ -75,7 +87,8 @@ export async function getUserFromSession(token: string): Promise<User | null> {
 
 // Delete session
 export async function deleteSession(token: string): Promise<void> {
-  await db.query("DELETE FROM sessions WHERE token = $1", [token])
+  const hashedToken = await hashToken(token)
+  await db.query("DELETE FROM sessions WHERE token = $1", [hashedToken])
 }
 
 // Get current user (server component)

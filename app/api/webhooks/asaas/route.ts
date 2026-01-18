@@ -1,9 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
-import type { AsaasWebhookEvent } from "@/lib/asaas"
+import { getAsaasClient, type AsaasWebhookEvent } from "@/lib/asaas"
 
 export async function POST(request: NextRequest) {
   try {
+    const asaas = getAsaasClient()
+    if (!asaas.validateWebhook(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const event: AsaasWebhookEvent = await request.json()
 
     // Log webhook for debugging
@@ -95,7 +100,8 @@ async function handlePaymentConfirmed(event: AsaasWebhookEvent) {
   )
 
   // Update daily summary
-  const date = new Date(payment.paymentDate || payment.confirmedDate).toISOString().split("T")[0]
+  const paymentDateStr = payment.paymentDate || payment.confirmedDate || new Date().toISOString()
+  const date = new Date(paymentDateStr).toISOString().split("T")[0]
   if (charge.collector_id) {
     await db.query(
       `INSERT INTO daily_summaries (company_id, collector_id, date, charges_collected, collected_amount, commission_earned)

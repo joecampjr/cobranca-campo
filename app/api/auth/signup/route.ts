@@ -1,10 +1,19 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createUser, createSession } from "@/lib/auth"
 import { cookies } from "next/headers"
+import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
   try {
     const { name, email, password, phone, cpf } = await request.json()
+
+    // Rate limiting
+    const ip = request.headers.get("x-forwarded-for") || "anonymous"
+    const rl = await rateLimit(`signup:${ip}`, 3, 3600) // Max 3 signups per hour per IP
+
+    if (!rl.success) {
+      return NextResponse.json({ error: "Too many signups from this IP. Please try again later." }, { status: 429 })
+    }
 
     if (!name || !email || !password || !cpf) {
       return NextResponse.json({ error: "Name, email, password and CPF are required" }, { status: 400 })

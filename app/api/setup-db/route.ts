@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        // Simple security check
+        const { searchParams } = new URL(request.url)
+        const secret = searchParams.get("secret") || request.headers.get("x-setup-secret")
+
+        if (process.env.NODE_ENV === "production" && secret !== process.env.SETUP_DB_SECRET) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+
         // SQL script from scripts/01-create-tables.sql
         const sql = `
 -- Enable UUID extension
@@ -227,6 +235,15 @@ CREATE TABLE IF NOT EXISTS webhook_logs (
     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Rate limiting
+CREATE TABLE IF NOT EXISTS rate_limits (
+    id SERIAL PRIMARY KEY,
+    key VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_rate_limits_key ON rate_limits(key);
+CREATE INDEX IF NOT EXISTS idx_rate_limits_created_at ON rate_limits(created_at);
 
 -- ============================================
 -- REPORTS & ANALYTICS
